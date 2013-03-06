@@ -1,0 +1,42 @@
+﻿<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+		var result = <%- JSON.stringify(result) %>;
+		console.log("test results: ",result);
+		
+		var dataArr = [
+		["Users number"],
+		];
+		for(var i = 0; i<result.length;i++){
+			dataArr[0].push(result[i].name);
+			var values = result[i].values;
+			for(var j=0;j<values.length;j++){
+				if(!dataArr[j+1]){
+					dataArr[j+1] = [];
+					dataArr[j+1].push(j+1);
+				}
+				dataArr[j+1].push(values[j]);
+			}
+		}
+		
+		console.log("generated data", dataArr);
+		var data = google.visualization.arrayToDataTable(dataArr);
+
+        var options = {
+          title: 'Request delays'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+	<a href="/startTest">RestartTest</a>
+  </body>
+</html>
